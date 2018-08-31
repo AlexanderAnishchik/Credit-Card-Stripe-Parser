@@ -57,7 +57,7 @@ Library for parsing magnetic stripe track data of credit cards
 private String _testFullTrack = "%B5168755544412233^PKMMV/UNEMBOXXXX       ^1807111100000000000000111000000?;5168755544412233=18071111000011100000?";
  var result = new FullTrackParser().ParseTrackOne(_testFullTrack);
  ```
- will be parse into model:
+ will be parsed into model:
  
   ```
 TrackOneModel testTrack1 = new TrackOneModel
