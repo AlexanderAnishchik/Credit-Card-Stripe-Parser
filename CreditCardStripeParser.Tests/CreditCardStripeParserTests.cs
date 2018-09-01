@@ -7,16 +7,30 @@ namespace CreditCardStripeParser.Tests
 {
     public class CreditCardStripeParserWithoutLRCTests
     {
-        private readonly String _testFullTrack = "%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?;5168755544412233=18071111000011100000?";
-        [Fact]
-        public void Should_Parse_Full_Track_Without_Exception()
+        private const String _testFullTrack = "%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?;5168755544412233=18071111000011100000?";
+        private const String _testFullTrackLRC = "%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?3;5168755544412233=18071111000011100000?\0";
+
+        private const String _testTrackOne = "%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?";
+        private const String _testTrackOneLRC = "%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?3";
+
+        private const String _testTrackTwo = ";5168755544412233=18071111000011100000?";
+        private const String _testTrackTwoLRC = ";5168755544412233=18071111000011100000?\0";
+
+        [Theory]
+        [InlineData(_testFullTrack)]
+        [InlineData(_testFullTrackLRC)]
+        public void Should_Parse_Full_Track_Without_Exception(string track)
         {
             var parser = new FullTrackParser();
-            var result = parser.Parse(_testFullTrack);
+            var result = parser.Parse(track);
             Assert.True(result.IsTrackOneValid && result.IsTrackTwoValid);
         }
-        [Fact]
-        public void Should_TrackOneModel_Match_Track1_String()
+        [Theory]
+        [InlineData(_testFullTrack)]
+        [InlineData(_testTrackOne)]
+        [InlineData(_testFullTrackLRC)]
+        [InlineData(_testTrackOneLRC)]
+        public void Should_TrackOneModel_Match_Track1_String(string track)
         {
             TrackOneModel testTrack1 = new TrackOneModel
             {
@@ -29,11 +43,15 @@ namespace CreditCardStripeParser.Tests
                 SourceString = "B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000"
             };
             var parser = new FullTrackParser();
-            var result = parser.Parse(_testFullTrack);
+            var result = parser.Parse(track);
             Assert.Equal(JsonConvert.SerializeObject(testTrack1), JsonConvert.SerializeObject(result.TrackOne));
         }
-        [Fact]
-        public void Should_TrackTwoModel_Match_Track2_String()
+        [Theory]
+        [InlineData(_testFullTrack)]
+        [InlineData(_testTrackTwo)]
+        [InlineData(_testFullTrackLRC)]
+        [InlineData(_testTrackTwoLRC)]
+        public void Should_TrackTwoModel_Match_Track2_String(string track)
         {
             TrackTwoModel testTrack2 = new TrackTwoModel
             {
@@ -44,7 +62,7 @@ namespace CreditCardStripeParser.Tests
                 SourceString = "5168755544412233=18071111000011100000"
             };
             var parser = new FullTrackParser();
-            var result = parser.Parse(_testFullTrack);
+            var result = parser.Parse(track);
             Assert.Equal(JsonConvert.SerializeObject(testTrack2), JsonConvert.SerializeObject(result.TrackTwo));
         }
         [Fact]

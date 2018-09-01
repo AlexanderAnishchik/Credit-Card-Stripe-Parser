@@ -132,12 +132,15 @@ namespace CreditCardStripeParser
         }
         private bool _ValidateTrackOne(string fullTrack)
         {
-
-            var potentialLRC = fullTrack[fullTrack.IndexOf(_ES1) + 1];
+            if (!fullTrack.Contains(_SS1)) return false;
+            var es1Index = fullTrack.IndexOf(_ES1);
+            if (es1Index == fullTrack.Length - 1)
+                return true;
+            var potentialLRC = fullTrack[es1Index + 1];
             if (potentialLRC != _SS2)
             {
                 var lrc = potentialLRC;
-                var calculatedLRC = _CalculateLRC(fullTrack.Substring(1, fullTrack.IndexOf(_ES1)).Select(c => (byte)c).ToArray());
+                var calculatedLRC = _CalculateLRC(fullTrack.Substring(1, es1Index).Select(c => (byte)c).ToArray());
                 if (lrc != calculatedLRC)
                     return false;
             }
@@ -146,6 +149,7 @@ namespace CreditCardStripeParser
         }
         private bool _ValidateTrackTwo(string fullTrack)
         {
+            if (!fullTrack.Contains(_SS2)) return false;
             var potentialLRC = fullTrack.Last();
             if (potentialLRC != _ES2)
             {

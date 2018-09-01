@@ -1,1 +1,5 @@
 /.vs
+/CreditCardStripeParser/obj
+/CreditCardStripeParser/bin
+/CreditCardStripeParser.Tests/bin
+/CreditCardStripeParser.Tests/obj
