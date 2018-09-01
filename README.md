@@ -1,6 +1,8 @@
 # Credit Card Magnetic Stripe Parser
 Library for parsing magnetic stripe track data of credit cards
 
+[NuGet CreditCardStripeParser Package](https://www.nuget.org/packages/CreditCardStripeParser/1.0.0)
+
 ### A simple .Net Standard parser with following functionality:
 
 * Parse whole magnetic stripe from card reader
