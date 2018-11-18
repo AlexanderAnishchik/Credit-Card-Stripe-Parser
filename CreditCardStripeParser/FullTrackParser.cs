@@ -64,7 +64,7 @@ namespace CreditCardStripeParser
                 ExpirationDate = new string(trackSegments[2].Take(4).ToArray()),
                 ServiceCode = new string(trackSegments[2].Skip(4).Take(3).ToArray()),
                 DiscretionaryData = new string(trackSegments[2].Skip(7).ToArray()),
-                SourceString = trackString
+                SourceString = fullTrack.Substring(0, fullTrack.IndexOf(_ES1)+1)
             };
         }
         public bool TryParseTrackOne(string fullTrack, out TrackOneModel trackOne)
@@ -97,7 +97,7 @@ namespace CreditCardStripeParser
                 ExpirationDate = new string(trackSegments[1].Take(4).ToArray()),
                 ServiceCode = new string(trackSegments[1].Skip(4).Take(3).ToArray()),
                 DiscretionaryData = new string(trackSegments[1].Skip(7).ToArray()),
-                SourceString = trackString
+                SourceString = fullTrack.Substring(fullTrack.IndexOf(_SS2), fullTrack.LastIndexOf(_ES2) - fullTrack.IndexOf(_SS2) + 1)
             };
         }
         public bool TryParseTrackTwo(string fullTrack, out TrackTwoModel trackTwo)

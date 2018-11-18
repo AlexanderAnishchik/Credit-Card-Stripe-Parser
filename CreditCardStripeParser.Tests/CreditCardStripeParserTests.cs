@@ -40,7 +40,7 @@ namespace CreditCardStripeParser.Tests
                 ExpirationDate = "1807",
                 ServiceCode = "111",
                 DiscretionaryData = "100000000000000111000000",
-                SourceString = "B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000"
+                SourceString = "%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?"
             };
             var parser = new FullTrackParser();
             var result = parser.Parse(track);
@@ -59,7 +59,7 @@ namespace CreditCardStripeParser.Tests
                 ExpirationDate = "1807",
                 ServiceCode = "111",
                 DiscretionaryData = "1000011100000",
-                SourceString = "5168755544412233=18071111000011100000"
+                SourceString = ";5168755544412233=18071111000011100000?"
             };
             var parser = new FullTrackParser();
             var result = parser.Parse(track);
