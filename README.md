@@ -5,7 +5,7 @@ Library for parsing magnetic stripe track data of credit cards
 
 ### A simple .Net Standard parser with following functionality:
 
-* Parse whole magnetic stripe from card reader
+* Parse whole magnetic stripe from a card reader
 * Parse whole magnetic stripe with LRC codes after Track 1 or Track 2
 * Separately validate and parse Track 1, Track 2
 * Calculate and validate LRC to confirm the integrity of the data
@@ -59,7 +59,7 @@ Library for parsing magnetic stripe track data of credit cards
 private String _testFullTrack = "%B5168755544412233^PKMMV/UNEMBOXXXX       ^1807111100000000000000111000000?;5168755544412233=18071111000011100000?";
  var result = new FullTrackParser().ParseTrackOne(_testFullTrack);
  ```
- will be parsed into model:
+ will be parsed into a model:
  
   ```
 TrackOneModel testTrack1 = new TrackOneModel
