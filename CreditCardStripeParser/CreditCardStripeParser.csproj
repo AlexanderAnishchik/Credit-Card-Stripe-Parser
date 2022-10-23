@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Alexander Anishchik</Authors>
     <Company>Alexander Anishchik</Company>
     <PackageProjectUrl>https://github.com/AlexanderAnishchik/Credit-Card-Stripe-Parser</PackageProjectUrl>
