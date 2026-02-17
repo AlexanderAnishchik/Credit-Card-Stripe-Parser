@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Library for parsing magnetic stripe track data of credit cards. Validate LRC and parse Track 1 and Track 2 into models.</Description>
     <Product>Credit Card Stripe Parser</Product>
-    <Version>1.1.0</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
 </Project>
