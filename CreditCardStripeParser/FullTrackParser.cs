@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace CreditCardStripeParser
 {
+    /// <summary>
+    /// Parser for credit card magnetic stripe track data conforming to ISO 7811-2 standard.
+    /// </summary>
     public class FullTrackParser
     {
         #region const
@@ -17,6 +20,13 @@ namespace CreditCardStripeParser
         private const char _ES2 = '?';
         #endregion
 
+        /// <summary>
+        /// Parses both Track 1 and Track 2 data from a full magnetic stripe read.
+        /// </summary>
+        /// <param name="fullTrack">The complete magnetic stripe data including both tracks.</param>
+        /// <returns>A model containing parsed Track 1 and Track 2 data with validation status.</returns>
+        /// <exception cref="InvalidTrackOneException">Thrown when Track 1 data is invalid.</exception>
+        /// <exception cref="InvalidTrackTwoException">Thrown when Track 2 data is invalid.</exception>
         public FullTrackDataModel Parse(string fullTrack)
         {
             TrackOneModel track1;
@@ -50,6 +60,13 @@ namespace CreditCardStripeParser
             };
 
         }
+        
+        /// <summary>
+        /// Parses Track 1 data from magnetic stripe.
+        /// </summary>
+        /// <param name="fullTrack">The magnetic stripe data containing Track 1.</param>
+        /// <returns>Parsed Track 1 data model.</returns>
+        /// <exception cref="Exception">Thrown when track data exceeds maximum length or is malformed.</exception>
         public TrackOneModel ParseTrackOne(string fullTrack)
         {
             string trackString = fullTrack.Substring(1, fullTrack.IndexOf(_ES1) - 1);
@@ -67,6 +84,13 @@ namespace CreditCardStripeParser
                 SourceString = fullTrack.Substring(0, fullTrack.IndexOf(_ES1)+1)
             };
         }
+        
+        /// <summary>
+        /// Attempts to parse Track 1 data from magnetic stripe without throwing exceptions.
+        /// </summary>
+        /// <param name="fullTrack">The magnetic stripe data containing Track 1.</param>
+        /// <param name="trackOne">The parsed Track 1 data if successful, null otherwise.</param>
+        /// <returns>True if parsing succeeded, false otherwise.</returns>
         public bool TryParseTrackOne(string fullTrack, out TrackOneModel trackOne)
         {
             try
@@ -85,6 +109,13 @@ namespace CreditCardStripeParser
                 return false;
             }
         }
+        
+        /// <summary>
+        /// Parses Track 2 data from magnetic stripe.
+        /// </summary>
+        /// <param name="fullTrack">The magnetic stripe data containing Track 2.</param>
+        /// <returns>Parsed Track 2 data model.</returns>
+        /// <exception cref="Exception">Thrown when track data exceeds maximum length or is malformed.</exception>
         public TrackTwoModel ParseTrackTwo(string fullTrack)
         {
 
@@ -100,6 +131,13 @@ namespace CreditCardStripeParser
                 SourceString = fullTrack.Substring(fullTrack.IndexOf(_SS2), fullTrack.LastIndexOf(_ES2) - fullTrack.IndexOf(_SS2) + 1)
             };
         }
+        
+        /// <summary>
+        /// Attempts to parse Track 2 data from magnetic stripe without throwing exceptions.
+        /// </summary>
+        /// <param name="fullTrack">The magnetic stripe data containing Track 2.</param>
+        /// <param name="trackTwo">The parsed Track 2 data if successful, null otherwise.</param>
+        /// <returns>True if parsing succeeded, false otherwise.</returns>
         public bool TryParseTrackTwo(string fullTrack, out TrackTwoModel trackTwo)
         {
             try
