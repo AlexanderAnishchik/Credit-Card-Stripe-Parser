@@ -72,6 +72,141 @@ namespace CreditCardStripeParser.Tests
             var parser = new FullTrackParser();
             Assert.ThrowsAny<Exception>(() => parser.Parse(str));
         }
+
+        [Theory]
+        [InlineData(_testTrackOne)]
+        [InlineData(_testFullTrack)]
+        [InlineData(_testTrackOneLRC)]
+        [InlineData(_testFullTrackLRC)]
+        public void TryParseTrackOne_Should_Return_True_For_Valid_Track(string track)
+        {
+            var parser = new FullTrackParser();
+            var result = parser.TryParseTrackOne(track, out var trackOne);
+            
+            Assert.True(result);
+            Assert.NotNull(trackOne);
+            Assert.Equal("5168755544412233", trackOne.PAN);
+            Assert.Equal("PKMMV/UNEMBOXXXX          ", trackOne.CardHolderName);
+            Assert.Equal("1807", trackOne.ExpirationDate);
+            Assert.Equal("111", trackOne.ServiceCode);
+        }
+
+        [Theory]
+        [InlineData("invalid track data")]
+        [InlineData(";5168755544412233=18071111000011100000?")]  // Only Track 2
+        [InlineData("")]
+        public void TryParseTrackOne_Should_Return_False_For_Invalid_Track(string track)
+        {
+            var parser = new FullTrackParser();
+            var result = parser.TryParseTrackOne(track, out var trackOne);
+            
+            Assert.False(result);
+            Assert.Null(trackOne);
+        }
+
+        [Theory]
+        [InlineData(_testTrackTwo)]
+        [InlineData(_testFullTrack)]
+        [InlineData(_testTrackTwoLRC)]
+        [InlineData(_testFullTrackLRC)]
+        public void TryParseTrackTwo_Should_Return_True_For_Valid_Track(string track)
+        {
+            var parser = new FullTrackParser();
+            var result = parser.TryParseTrackTwo(track, out var trackTwo);
+            
+            Assert.True(result);
+            Assert.NotNull(trackTwo);
+            Assert.Equal("5168755544412233", trackTwo.PAN);
+            Assert.Equal("1807", trackTwo.ExpirationDate);
+            Assert.Equal("111", trackTwo.ServiceCode);
+        }
+
+        [Theory]
+        [InlineData("invalid track data")]
+        [InlineData("%B5168755544412233^PKMMV/UNEMBOXXXX          ^1807111100000000000000111000000?")]  // Only Track 1
+        [InlineData("")]
+        public void TryParseTrackTwo_Should_Return_False_For_Invalid_Track(string track)
+        {
+            var parser = new FullTrackParser();
+            var result = parser.TryParseTrackTwo(track, out var trackTwo);
+            
+            Assert.False(result);
+            Assert.Null(trackTwo);
+        }
+
+        [Fact]
+        public void ParseTrackOne_Should_Parse_Correctly()
+        {
+            var parser = new FullTrackParser();
+            var result = parser.ParseTrackOne(_testTrackOne);
+            
+            Assert.NotNull(result);
+            Assert.Equal('B', result.FormatCode);
+            Assert.Equal("5168755544412233", result.PAN);
+            Assert.Equal("PKMMV/UNEMBOXXXX          ", result.CardHolderName);
+            Assert.Equal("1807", result.ExpirationDate);
+            Assert.Equal("111", result.ServiceCode);
+            Assert.Equal("100000000000000111000000", result.DiscretionaryData);
+        }
+
+        [Fact]
+        public void ParseTrackTwo_Should_Parse_Correctly()
+        {
+            var parser = new FullTrackParser();
+            var result = parser.ParseTrackTwo(_testTrackTwo);
+            
+            Assert.NotNull(result);
+            Assert.Equal("5168755544412233", result.PAN);
+            Assert.Equal("1807", result.ExpirationDate);
+            Assert.Equal("111", result.ServiceCode);
+            Assert.Equal("1000011100000", result.DiscretionaryData);
+        }
+
+        [Fact]
+        public void Parse_Should_Handle_Track_Without_LRC()
+        {
+            var parser = new FullTrackParser();
+            var result = parser.Parse(_testFullTrack);
+            
+            Assert.NotNull(result);
+            Assert.True(result.IsTrackOneValid);
+            Assert.True(result.IsTrackTwoValid);
+            Assert.NotNull(result.TrackOne);
+            Assert.NotNull(result.TrackTwo);
+        }
+
+        [Fact]
+        public void Parse_Should_Handle_Track_With_LRC()
+        {
+            var parser = new FullTrackParser();
+            var result = parser.Parse(_testFullTrackLRC);
+            
+            Assert.NotNull(result);
+            Assert.True(result.IsTrackOneValid);
+            Assert.True(result.IsTrackTwoValid);
+            Assert.NotNull(result.TrackOne);
+            Assert.NotNull(result.TrackTwo);
+        }
+
+        [Fact]
+        public void Parse_Should_Set_IsTrackOneValid_False_When_Track_One_Missing()
+        {
+            var parser = new FullTrackParser();
+            var result = parser.Parse(_testTrackTwo);
+            
+            Assert.False(result.IsTrackOneValid);
+            Assert.Null(result.TrackOne);
+        }
+
+        [Fact]
+        public void Parse_Should_Set_IsTrackTwoValid_False_When_Track_Two_Missing()
+        {
+            var parser = new FullTrackParser();
+            var result = parser.Parse(_testTrackOne);
+            
+            Assert.False(result.IsTrackTwoValid);
+            Assert.Null(result.TrackTwo);
+        }
     }
 }
 
